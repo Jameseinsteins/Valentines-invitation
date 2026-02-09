@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine 💘</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #ffb3c6, #ff758f, #ff4d6d);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  overflow: hidden;
+}
+
+.card {
+  background: linear-gradient(145deg, #ffffff, #ffe5ec);
+  border-radius: 25px;
+  padding: 30px;
+  width: 360px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  animation: popIn 0.6s ease;
+  position: relative;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+h1 {
+  color: #ff3366;
+  text-shadow: 1px 1px #ffd6e0;
+}
+
+img {
+  width: 210px;
+  border-radius: 18px;
+  margin: 15px 0;
+  box-shadow: 0 10px 20px rgba(255,77,109,0.4);
+}
+
+.buttons {
+  margin-top: 25px;
+  position: relative;
+  height: 140px;
+}
+
+button {
+  border: none;
+  border-radius: 15px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: bold;
+}
+
+#yesBtn {
+  background: linear-gradient(135deg, #ff4d6d, #ff85a1);
+  color: white;
+  padding: 14px 28px;
+  box-shadow: 0 8px 20px rgba(255,77,109,0.6);
+}
+
+#noBtn {
+  background: linear-gradient(135deg, #adb5bd, #ced4da);
+  color: #333;
+  padding: 12px 22px;
+  position: absolute;
+  left: 200px;
+  top: 10px;
+  opacity: 1;
+}
+
+/* Social buttons */
+.social-buttons a {
+  display: block;
+  margin: 12px auto;
+  padding: 14px;
+  width: 80%;
+  border-radius: 18px;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.instagram {
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
+}
+
+.facebook {
+  background: linear-gradient(135deg, #1877f2, #4e9cff);
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 💥 HEART CONFETTI */
+.heart {
+  position: fixed;
+  font-size: 24px;
+  animation: explode 1.5s ease-out forwards;
+}
+
+@keyframes explode {
+  0% {
+    transform: translate(0,0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(0.5);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Will you be my Valentine? 💝</h1>
+  <img id="gif" src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif">
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+</div>
+
+<!-- Sounds -->
+<audio id="noSound" src="NO_SOUND_LINK_HERE.mp3"></audio>
+<audio id="yesSound" src="YES_SOUND_LINK_HERE.mp3"></audio>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const gif = document.getElementById("gif");
+const noSound = document.getElementById("noSound");
+const yesSound = document.getElementById("yesSound");
+
+let yesSize = 1;
+let noOpacity = 1;
+
+const beggingGifs = [
+  // Cute sad
+  "https://media.giphy.com/media/OPU6wzx8JrHna/giphy.gif",
+  "https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif",
+
+  // Begging
+  "https://media.giphy.com/media/l2QDM9Jnim1YVILXa/giphy.gif",
+  "https://media.giphy.com/media/3ohs4BSacFKI7A717y/giphy.gif",
+
+  // VERY SAD
+  "https://media.giphy.com/media/xUPGcguWZHRC2HyBRS/giphy.gif",
+  "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif"
+];
+  
+const yesGifs = [
+  "https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif",
+  "https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif",
+  "https://media.giphy.com/media/3oriO6qJiXajN0TyDu/giphy.gif",
+  "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif"
+];
+
+
+
+let sadIndex = 0;
+
+noBtn.addEventListener("click", () => {
+  noSound.currentTime = 0;
+  noSound.play();
+
+  // Move NO
+  noBtn.style.left = Math.random() * 220 + "px";
+  noBtn.style.top = Math.random() * 90 + "px";
+
+  // Fade NO
+  noOpacity -= 0.15;
+  noBtn.style.opacity = noOpacity;
+  if (noOpacity <= 0) noBtn.style.display = "none";
+
+  // Grow YES
+  yesSize += 0.2;
+  yesBtn.style.transform = `scale(${yesSize})`;
+
+  // Escalating sadness 😭
+  gif.src = beggingGifs[Math.min(sadIndex, beggingGifs.length - 1)];
+  sadIndex++;
+});
+
+
+yesBtn.addEventListener("click", () => {
+  yesSound.play();
+  heartConfetti();
+
+  let slideIndex = 0;
+
+  document.querySelector(".card").innerHTML = `
+    <h1>I knew you'd gonna agree 💘🥰</h1>
+
+    <img id="yesSlideshow" src="${yesGifs[0]}">
+
+    <div class="social-buttons">
+      <a href="INSTAGRAM_LINK_HERE" target="_blank" class="instagram">
+        Instagram 📸
+      </a>
+      <a href="FACEBOOK_LINK_HERE" target="_blank" class="facebook">
+        Facebook 💙
+      </a>
+    </div>
+
+    <div class="note">
+      For more details, message my social media accounts 💬💖
+    </div>
+  `;
+
+  // 🎞️ Auto slideshow
+  const slideshow = document.getElementById("yesSlideshow");
+
+  setInterval(() => {
+    slideIndex = (slideIndex + 1) % yesGifs.length;
+    slideshow.src = yesGifs[slideIndex];
+  }, 2000);
+});
+
+/* 💥 HEART CONFETTI FUNCTION */
+function heartConfetti() {
+  for (let i = 0; i < 30; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "💖";
+
+    heart.style.left = "50%";
+    heart.style.top = "50%";
+
+    heart.style.setProperty("--x", (Math.random() * 400 - 200) + "px");
+    heart.style.setProperty("--y", (Math.random() * 400 - 200) + "px");
+
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 1500);
+  }
+}
+</script>
+
+</body>
+</html>
